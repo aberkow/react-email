@@ -46,6 +46,10 @@
 
 	'use strict';
 	
+	/*
+	Create a simple mockup of an email reader which uses React Router to handle routing. The app should have a sidebar which allows you to navigate between the inbox and the spam folder. Clicking on these should take you to a /inbox or /spam route. Each of the /inbox and /spam routes should display a list of emails. Clicking on an email should take you to a /email/:emailId route, which displays the email contents.
+	*/
+	
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(38);
 	var router = __webpack_require__(168);
@@ -56,39 +60,117 @@
 	var Link = router.Link;
 	
 	var EMAILS = {
-	    inbox: {
-	        0: {
-	            id: 0,
-	            from: "billg@microsoft.com",
-	            to: "TeamWoz@Woz.org",
-	            title: "Possible work opportunity",
-	            content: "Dear Woz.  Fancy a job at Mister Softee?  Bill x"
-	        },
-	        1: {
-	            id: 1,
-	            from: "zuck@facebook.com",
-	            to: "TeamWoz@Woz.org",
-	            title: "Do you know PHP?",
-	            content: "Dear Woz.  We are in need of a PHP expert.  Fast.  Zuck x"
-	        }
+	  inbox: {
+	    0: {
+	      id: 0,
+	      from: "billg@microsoft.com",
+	      to: "TeamWoz@Woz.org",
+	      title: "Possible work opportunity",
+	      content: "Dear Woz.  Fancy a job at Mister Softee?  Bill x"
 	    },
-	    spam: {
-	        0: {
-	            id: 0,
-	            from: "ChEaPFl1ghTZ@hotmail.com",
-	            to: "TeamWoz@Woz.org",
-	            title: "WaNt CHEEp FlitZ",
-	            content: "Theyre CheEp"
-	        },
-	        1: {
-	            id: 1,
-	            from: "NiKEAIRJordanZ@hotmail.com",
-	            to: "TeamWoz@Woz.org",
-	            title: "JorDanz For SAle",
-	            content: "Theyre REELY CheEp"
-	        }
+	    1: {
+	      id: 1,
+	      from: "zuck@facebook.com",
+	      to: "TeamWoz@Woz.org",
+	      title: "Do you know PHP?",
+	      content: "Dear Woz.  We are in need of a PHP expert.  Fast.  Zuck x"
 	    }
+	  },
+	  spam: {
+	    0: {
+	      id: 0,
+	      from: "ChEaPFl1ghTZ@hotmail.com",
+	      to: "TeamWoz@Woz.org",
+	      title: "WaNt CHEEp FlitZ",
+	      content: "Theyre CheEp"
+	    },
+	    1: {
+	      id: 1,
+	      from: "NiKEAIRJordanZ@hotmail.com",
+	      to: "TeamWoz@Woz.org",
+	      title: "JorDanz For SAle",
+	      content: "Theyre REELY CheEp"
+	    }
+	  }
 	};
+	
+	var EmailList = function EmailList(props) {
+	  var emails = Object.keys(props.emails);
+	  console.log();
+	};
+	
+	var EmailListContainer = function EmailListContainer() {
+	  return React.createElement(EmailList, { emails: EMAILS });
+	};
+	
+	var App = function App(props) {
+	  console.log(props.children);
+	  return React.createElement(
+	    'div',
+	    null,
+	    React.createElement(
+	      'header',
+	      { className: 'header' },
+	      React.createElement(
+	        'h1',
+	        { className: 'header__title' },
+	        'Email!'
+	      ),
+	      React.createElement(
+	        'nav',
+	        { className: 'header__nav' },
+	        React.createElement(
+	          'ul',
+	          { className: 'nav__list' },
+	          React.createElement(
+	            'li',
+	            { className: 'nav__list-item' },
+	            React.createElement(
+	              Link,
+	              { to: '/email' },
+	              props.children
+	            )
+	          ),
+	          React.createElement(
+	            'li',
+	            { className: 'nav__list-item' },
+	            React.createElement(
+	              Link,
+	              { to: '/spam' },
+	              'Spam'
+	            )
+	          )
+	        )
+	      )
+	    ),
+	    React.createElement(
+	      'div',
+	      null,
+	      props.children
+	    )
+	  );
+	};
+	
+	var routes = React.createElement(
+	  Router,
+	  { history: hashHistory },
+	  React.createElement(Route, { path: '/', component: App }),
+	  React.createElement(
+	    Route,
+	    { path: '/email', component: App },
+	    React.createElement(IndexRoute, { component: EmailListContainer })
+	  )
+	);
+	
+	/*
+	    <Route path='/spam' component={App}>
+	      <IndexRoute component={SpamListContainer} />
+	    </Route>
+	*/
+	
+	document.addEventListener('DOMContentLoaded', function () {
+	  ReactDOM.render(React.createElement(App, null), document.getElementById('app'));
+	});
 
 /***/ },
 /* 1 */
