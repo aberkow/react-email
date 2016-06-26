@@ -94,17 +94,165 @@
 	  }
 	};
 	
-	var EmailList = function EmailList(props) {
-	  var emails = Object.keys(props.emails);
-	  console.log();
+	var Email = function Email(props) {
+	  return React.createElement(
+	    'div',
+	    null,
+	    React.createElement(
+	      'p',
+	      null,
+	      React.createElement(
+	        'strong',
+	        null,
+	        'From: '
+	      ),
+	      props.from
+	    ),
+	    React.createElement(
+	      'p',
+	      null,
+	      React.createElement(
+	        'strong',
+	        null,
+	        'To: '
+	      ),
+	      props.to
+	    ),
+	    React.createElement(
+	      'h2',
+	      null,
+	      React.createElement(
+	        Link,
+	        { to: '/email/' + props.id },
+	        props.title
+	      )
+	    ),
+	    React.createElement(
+	      'p',
+	      null,
+	      props.content
+	    )
+	  );
 	};
 	
+	var Spam = function Spam(props) {
+	  return React.createElement(
+	    'div',
+	    null,
+	    React.createElement(
+	      'p',
+	      null,
+	      React.createElement(
+	        'strong',
+	        null,
+	        'From: '
+	      ),
+	      props.from
+	    ),
+	    React.createElement(
+	      'p',
+	      null,
+	      React.createElement(
+	        'strong',
+	        null,
+	        'To: '
+	      ),
+	      props.to
+	    ),
+	    React.createElement(
+	      'h2',
+	      null,
+	      React.createElement(
+	        Link,
+	        { to: '/spam/' + props.id },
+	        props.title
+	      )
+	    ),
+	    React.createElement(
+	      'p',
+	      null,
+	      props.content
+	    )
+	  );
+	};
+	
+	var EmailList = function EmailList(props) {
+	  var emails = Object.keys(props.emails).map(function (email, index) {
+	    console.log(index, email, 'from EmailList');
+	    var email = props.emails[email];
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(Email, { id: email.id,
+	        from: email.from,
+	        to: email.to,
+	        title: email.title,
+	        content: email.content,
+	        key: index })
+	    );
+	  });
+	  return React.createElement(
+	    'div',
+	    null,
+	    emails
+	  );
+	};
+	
+	var SpamList = function SpamList(props) {
+	  var spams = Object.keys(props.spams).map(function (spam, index) {
+	    console.log(index, spam, 'from SpamList');
+	    var spam = props.spams[spam];
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(Spam, { id: spam.id,
+	        from: spam.from,
+	        to: spam.to,
+	        title: spam.title,
+	        content: spam.content,
+	        key: index })
+	    );
+	  });
+	  return React.createElement(
+	    'div',
+	    null,
+	    spams
+	  );
+	};
+	
+	var EmailContainer = function EmailContainer(props) {
+	  console.log(props);
+	  var email = EMAILS[props.params.email];
+	
+	  return React.createElement(Email, { id: email.id,
+	    from: email.from,
+	    to: email.to,
+	    title: email.title,
+	    content: email.content });
+	};
+	
+	/*
+	var SpamContainer = function(props){
+	  var spam = EMAILS[props.params.spam];
+	  return (
+	    <Spam id={spam.id}
+	      from={spam.from}
+	      to={spam.to}
+	      title={spam.title}
+	      content={spam.content} />
+	  );
+	};
+	*/
+	
 	var EmailListContainer = function EmailListContainer() {
-	  return React.createElement(EmailList, { emails: EMAILS });
+	  return React.createElement(EmailList, { emails: EMAILS.inbox });
+	};
+	
+	var SpamListContainer = function SpamListContainer() {
+	  return React.createElement(SpamList, { spams: EMAILS.spam });
 	};
 	
 	var App = function App(props) {
-	  console.log(props.children);
 	  return React.createElement(
 	    'div',
 	    null,
@@ -128,7 +276,7 @@
 	            React.createElement(
 	              Link,
 	              { to: '/email' },
-	              props.children
+	              'Email'
 	            )
 	          ),
 	          React.createElement(
@@ -158,18 +306,21 @@
 	  React.createElement(
 	    Route,
 	    { path: '/email', component: App },
-	    React.createElement(IndexRoute, { component: EmailListContainer })
+	    React.createElement(IndexRoute, { component: EmailListContainer }),
+	    React.createElement(Route, { path: ':email', component: EmailContainer })
+	  ),
+	  React.createElement(
+	    Route,
+	    { path: '/spam', component: App },
+	    React.createElement(IndexRoute, { component: SpamListContainer })
 	  )
 	);
 	
-	/*
-	    <Route path='/spam' component={App}>
-	      <IndexRoute component={SpamListContainer} />
-	    </Route>
-	*/
+	//
+	// <Route path=':spam' component={SpamContainer} />
 	
 	document.addEventListener('DOMContentLoaded', function () {
-	  ReactDOM.render(React.createElement(App, null), document.getElementById('app'));
+	  ReactDOM.render(routes, document.getElementById('app'));
 	});
 
 /***/ },
